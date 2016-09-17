@@ -40,4 +40,10 @@ var routes = Routes{
 		"/record/create",
 		RecordCreate,
 	},
+	Route{
+		"TripCreate",
+		"POST",
+		"/trip/create",
+		TripCreate,
+	},
 }

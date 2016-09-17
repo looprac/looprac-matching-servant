@@ -21,6 +21,8 @@ func main() {
 
 	router := NewRouter()
 
+	initClient()
+
 	port := ":" + os.Getenv("HTTP_PORT")
 	log.Fatal(http.ListenAndServe(port, router))
 }
