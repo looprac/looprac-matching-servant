@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 type Trip struct {
 	Id         int32   `json:"id"`
 	OriginAlt  float64 `json:"origin_alt"`
@@ -23,7 +19,6 @@ func NewTrip() *Trip {
 		rows.Scan(&t.Id)
 		break
 	}
-	fmt.Println(t.Id)
 	t.Id += 1
 	return t
 }

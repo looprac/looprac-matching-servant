@@ -29,5 +29,5 @@ func getTravelTime(origin_alt, origin_lng, destin_alt, destin_lng float64) float
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
 	}
-	return responses[0].Legs[0].Duration.Minutes()
+	return responses[0].Legs[0].Duration.Seconds()
 }
