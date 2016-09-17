@@ -9,7 +9,7 @@ import (
 )
 
 type Record struct {
-	Tripid    string  `json:"trip_id"`
+	Tripid    int32   `json:"trip_id"`
 	Time      int32   `json:"time"`
 	Altitude  float64 `json:"altitude"`
 	Longitude float64 `json:"longitude"`
@@ -46,12 +46,10 @@ func (r *Record) Save() error {
 	if err == nil {
 		query := fmt.Sprintf("UPDATE records SET (Time, Altitude, Longitude, Action, psg_count) = (%d, %f, %f, '%s', %d) WHERE uuid = '%s'",
 			r.Time, r.Altitude, r.Longitude, r.Action, r.Psgcount, existed.uuid)
-		fmt.Println(query)
 		dbConn.QueryRow(query)
 	} else {
-		query := fmt.Sprintf("INSERT INTO records VALUES('%s', %d, %f, %f, '%s', %d, '%s')",
+		query := fmt.Sprintf("INSERT INTO records VALUES(%d, %d, %f, %f, '%s', %d, '%s')",
 			r.Tripid, r.Time, r.Altitude, r.Longitude, r.Action, r.Psgcount, r.uuid)
-		fmt.Println(query)
 		dbConn.QueryRow(query)
 	}
 	return nil
