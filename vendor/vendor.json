@@ -21,6 +21,18 @@
 			"revisionTime": "2015-09-07T01:02:28Z"
 		},
 		{
+			"checksumSHA1": "eOXF2PEvYLMeD8DSzLZJWbjYzco=",
+			"path": "github.com/kr/pretty",
+			"revision": "cfb55aafdaf3ec08f0db22699ab822c50091b1c4",
+			"revisionTime": "2016-08-23T17:07:15Z"
+		},
+		{
+			"checksumSHA1": "uulQHQ7IsRKqDudBC8Go9J0gtAc=",
+			"path": "github.com/kr/text",
+			"revision": "7cafcd837844e784b526369c9bce262804aebc60",
+			"revisionTime": "2016-05-04T02:26:26Z"
+		},
+		{
 			"checksumSHA1": "dNYxHiBLalTqluak2/Z8c3RsSEM=",
 			"path": "github.com/lib/pq",
 			"revision": "50761b0867bd1d9d069276790bcd4a3bccf2324a",
@@ -37,6 +49,30 @@
 			"path": "github.com/satori/go.uuid",
 			"revision": "0aa62d5ddceb50dbcb909d790b5345affd3669b6",
 			"revisionTime": "2016-07-13T18:03:06Z"
+		},
+		{
+			"checksumSHA1": "9jjO5GjLa0XF/nfWihF02RoH4qc=",
+			"path": "golang.org/x/net/context",
+			"revision": "71a035914f99bb58fe82eac0f1289f10963d876c",
+			"revisionTime": "2016-09-12T21:59:12Z"
+		},
+		{
+			"checksumSHA1": "WHc3uByvGaMcnSoI21fhzYgbOgg=",
+			"path": "golang.org/x/net/context/ctxhttp",
+			"revision": "71a035914f99bb58fe82eac0f1289f10963d876c",
+			"revisionTime": "2016-09-12T21:59:12Z"
+		},
+		{
+			"checksumSHA1": "px74ysa3Eg3RQj5YdM7fz9TkPfA=",
+			"path": "googlemaps.github.io/maps",
+			"revision": "ce8994f7a138534e9da9fd27c5424eeea20ac563",
+			"revisionTime": "2016-08-30T05:06:11Z"
+		},
+		{
+			"checksumSHA1": "T47E4DD/+UCGq0rAc70yGCEWJ0w=",
+			"path": "googlemaps.github.io/maps/internal",
+			"revision": "ce8994f7a138534e9da9fd27c5424eeea20ac563",
+			"revisionTime": "2016-08-30T05:06:11Z"
 		}
 	],
 	"rootPath": "github.com/looprac-matching-servant"
