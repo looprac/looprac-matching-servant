@@ -1,0 +1,43 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "g/V4qrXjUGG9B+e3hB+4NAYJ5Gs=",
+			"path": "github.com/gorilla/context",
+			"revision": "08b5f424b9271eedf6f9f0ce86cb9396ed337a42",
+			"revisionTime": "2016-08-17T18:46:32Z"
+		},
+		{
+			"checksumSHA1": "oDsOWp1nBMGpQ9gCFnczGADwZTE=",
+			"path": "github.com/gorilla/mux",
+			"revision": "0a192a193177452756c362c20087ddafcf6829c4",
+			"revisionTime": "2016-09-02T15:33:43Z"
+		},
+		{
+			"checksumSHA1": "ljZrmD7pmMXAkGNfp6IEzj31fY8=",
+			"path": "github.com/joho/godotenv",
+			"revision": "4ed13390c0acd2ff4e371e64d8b97c8954138243",
+			"revisionTime": "2015-09-07T01:02:28Z"
+		},
+		{
+			"checksumSHA1": "dNYxHiBLalTqluak2/Z8c3RsSEM=",
+			"path": "github.com/lib/pq",
+			"revision": "50761b0867bd1d9d069276790bcd4a3bccf2324a",
+			"revisionTime": "2016-08-31T22:25:20Z"
+		},
+		{
+			"checksumSHA1": "xppHi82MLqVx1eyQmbhTesAEjx8=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "50761b0867bd1d9d069276790bcd4a3bccf2324a",
+			"revisionTime": "2016-08-31T22:25:20Z"
+		},
+		{
+			"checksumSHA1": "zmC8/3V4ls53DJlNTKDZwPSC/dA=",
+			"path": "github.com/satori/go.uuid",
+			"revision": "0aa62d5ddceb50dbcb909d790b5345affd3669b6",
+			"revisionTime": "2016-07-13T18:03:06Z"
+		}
+	],
+	"rootPath": "github.com/looprac-matching-servant"
+}
