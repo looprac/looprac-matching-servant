@@ -46,4 +46,10 @@ var routes = Routes{
 		"/trip/create",
 		TripCreate,
 	},
+	Route{
+		"TripGet",
+		"GET",
+		"/trip/{tripid}",
+		TripGet,
+	},
 }

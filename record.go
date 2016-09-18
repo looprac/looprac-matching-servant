@@ -11,7 +11,7 @@ import (
 type Record struct {
 	Tripid    int32   `json:"trip_id"`
 	Time      int32   `json:"time"`
-	Altitude  float64 `json:"altitude"`
+	Latitude  float64 `json:"altitude"`
 	Longitude float64 `json:"longitude"`
 	Action    string  `json:"action"`
 	Psgcount  int8    `json:"psg_count"`
@@ -25,7 +25,7 @@ func NewRecord() *Record {
 }
 
 func (r *Record) Print() {
-	fmt.Println(r.Tripid, r.Time, r.Altitude, r.Longitude, r.Action, r.Psgcount)
+	fmt.Println(r.Tripid, r.Time, r.Latitude, r.Longitude, r.Action, r.Psgcount)
 }
 
 func (r *Record) Load(condition string) error {
@@ -34,7 +34,7 @@ func (r *Record) Load(condition string) error {
 		log.Fatal(err)
 	}
 	for rows.Next() {
-		err := rows.Scan(&r.Tripid, &r.Time, &r.Altitude, &r.Longitude, &r.Action, &r.Psgcount, &r.uuid)
+		err := rows.Scan(&r.Tripid, &r.Time, &r.Latitude, &r.Longitude, &r.Action, &r.Psgcount, &r.uuid)
 		return err
 	}
 	return errors.New("Not Found")
@@ -44,12 +44,12 @@ func (r *Record) Save() error {
 	existed := new(Record)
 	err := existed.Load(fmt.Sprintf("uuid = '%s'", r.uuid))
 	if err == nil {
-		query := fmt.Sprintf("UPDATE records SET (Time, Altitude, Longitude, Action, psg_count) = (%d, %f, %f, '%s', %d) WHERE uuid = '%s'",
-			r.Time, r.Altitude, r.Longitude, r.Action, r.Psgcount, existed.uuid)
+		query := fmt.Sprintf("UPDATE records SET (Time, Latitude, Longitude, Action, psg_count) = (%d, %f, %f, '%s', %d) WHERE uuid = '%s'",
+			r.Time, r.Latitude, r.Longitude, r.Action, r.Psgcount, existed.uuid)
 		dbConn.QueryRow(query)
 	} else {
 		query := fmt.Sprintf("INSERT INTO records VALUES(%d, %d, %f, %f, '%s', %d, '%s')",
-			r.Tripid, r.Time, r.Altitude, r.Longitude, r.Action, r.Psgcount, r.uuid)
+			r.Tripid, r.Time, r.Latitude, r.Longitude, r.Action, r.Psgcount, r.uuid)
 		dbConn.QueryRow(query)
 	}
 	return nil
