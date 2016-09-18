@@ -23,7 +23,6 @@ func TripCreate(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewDecoder(r.Body).Decode(t)
 	query := fmt.Sprintf("INSERT INTO trips VALUES(%d, %f, %f, %f, %f, %d, %d, %d, '%s')",
 		t.Id, t.OriginLat, t.OriginLng, t.DestinLat, t.DestinLng, t.LeaveAfter, t.ArriveBy, t.Seats, t.DriverUUID)
-	dbConn.QueryRow(query)
 
 	traveltime := int32(getTravelTime(t.OriginLat, t.OriginLng, t.DestinLat, t.DestinLng))
 
@@ -45,27 +44,67 @@ func TripCreate(w http.ResponseWriter, r *http.Request) {
 	destin.Psgcount = 1
 	destin.Save()
 
+	dbConn.QueryRow(query)
 }
 
 func TripGet(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tripid := vars["tripid"]
-	t := new(Trip)
-	t.Load(fmt.Sprintf("id = %s", tripid))
-	query := fmt.Sprintf("SELECT time, latitude, longitude, action FROM records WHERE trip_id = %s ORDER BY time", tripid)
-	rows, _ := dbConn.Query(query)
-	stepstr := "\"steps\":["
-	for rows.Next() {
-		var time int32
-		var latitude, longitude float64
-		var action string
-		rows.Scan(&time, &latitude, &longitude, &action)
-		rowstr := fmt.Sprintf("{\"time\":%d,\"latitude\":%f,\"longitude\":%f,\"action\":%s}",
-			time, latitude, longitude, action)
-		stepstr += rowstr + ","
-	}
-	jsonmar, _ := json.Marshal(t)
-	jsonstr := string(jsonmar)
-	jsonstr = jsonstr[:len(jsonstr)-1] + "," + stepstr[:len(stepstr)-1] + "]}"
+	jsonstr := GetTripJson(tripid)
 	fmt.Fprintln(w, jsonstr)
+}
+
+func matchTrips(lat, lng float64, leave_after, arrive_by int32) []int32 {
+	geoeps := 1.0
+
+	query := "SELECT trip_id FROM records"
+	query += fmt.Sprintf(" WHERE ABS(latitude - %f) < %f", lat, geoeps)
+	query += fmt.Sprintf(" AND ABS(longitude - %f) < %f", lng, geoeps)
+	query += fmt.Sprintf(" AND time >= %d", leave_after)
+	query += fmt.Sprintf(" AND time <= %d", arrive_by)
+	query += " ORDER BY trip_id"
+	rows, _ := dbConn.Query(query)
+	ids := []int32{}
+	for rows.Next() {
+		var id int32
+		rows.Scan(&id)
+		ids = append(ids, id)
+	}
+	return ids
+}
+
+func unionSet(id1, id2 []int32) []int32 {
+	ids := []int32{}
+	l1 := 0
+	l2 := 0
+	r1 := len(id1)
+	r2 := len(id2)
+	for l1 < r1 || l2 < r2 {
+		if id1[l1] == id2[l2] {
+			ids = append(ids, id2[l2])
+			l1 += 1
+			l2 += 1
+		} else if id1[l1] < id2[l2] {
+			l1 += 1
+		} else {
+			l2 += 1
+		}
+	}
+	return ids
+}
+
+func TripSearch(w http.ResponseWriter, r *http.Request) {
+	t := new(Trip)
+	_ = json.NewDecoder(r.Body).Decode(t)
+
+	id1 := matchTrips(t.OriginLat, t.OriginLng, t.LeaveAfter, t.ArriveBy)
+	id2 := matchTrips(t.DestinLat, t.DestinLng, t.LeaveAfter, t.ArriveBy)
+	ids := unionSet(id1, id2)
+
+	trip_info := "["
+	for _, id := range ids {
+		trip_info += GetTripJson(fmt.Sprint(id)) + ","
+	}
+	trip_info = trip_info[:len(trip_info)-1] + "]"
+	fmt.Fprintln(w, trip_info)
 }

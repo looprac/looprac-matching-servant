@@ -52,4 +52,10 @@ var routes = Routes{
 		"/trip/{tripid}",
 		TripGet,
 	},
+	Route{
+		"TripSearch",
+		"POST",
+		"/trip/search",
+		TripSearch,
+	},
 }

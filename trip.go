@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 )
 
@@ -26,6 +28,27 @@ func NewTrip() *Trip {
 	}
 	t.Id += 1
 	return t
+}
+
+func GetTripJson(tripid string) string {
+	t := new(Trip)
+	t.Load(fmt.Sprintf("id = %s", tripid))
+	query := fmt.Sprintf("SELECT time, latitude, longitude, action FROM records WHERE trip_id = %s ORDER BY time", tripid)
+	rows, _ := dbConn.Query(query)
+	stepstr := "\"steps\":["
+	for rows.Next() {
+		var time int32
+		var latitude, longitude float64
+		var action string
+		rows.Scan(&time, &latitude, &longitude, &action)
+		rowstr := fmt.Sprintf("{\"time\":%d,\"latitude\":%f,\"longitude\":%f,\"action\":%s}",
+			time, latitude, longitude, action)
+		stepstr += rowstr + ","
+	}
+	jsonmar, _ := json.Marshal(t)
+	jsonstr := string(jsonmar)
+	jsonstr = jsonstr[:len(jsonstr)-1] + "," + stepstr[:len(stepstr)-1] + "]}"
+	return jsonstr
 }
 
 func (t *Trip) Load(condition string) error {
