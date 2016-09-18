@@ -50,6 +50,7 @@ func (r *Record) Save() error {
 	} else {
 		query := fmt.Sprintf("INSERT INTO records VALUES(%d, %d, %f, %f, '%s', %d, '%s')",
 			r.Tripid, r.Time, r.Latitude, r.Longitude, r.Action, r.Psgcount, r.uuid)
+		log.Println(query)
 		dbConn.QueryRow(query)
 	}
 	return nil

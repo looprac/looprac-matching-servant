@@ -30,6 +30,7 @@ func TripCreate(w http.ResponseWriter, r *http.Request) {
 		log.Println("Invalid Localtion")
 		return
 	}
+	log.Println("Travel time: ", traveltime)
 
 	origin := NewRecord()
 	origin.Tripid = t.Id
@@ -61,13 +62,14 @@ func TripGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func matchTrips(lat, lng float64, leave_after, arrive_by int32) []int32 {
-	geoeps := 1.0
+	log.Println(lat, lng, leave_after, arrive_by)
+	geoeps := 0.1
 
 	query := "SELECT trip_id FROM records"
 	query += fmt.Sprintf(" WHERE ABS(latitude - %f) < %f", lat, geoeps)
 	query += fmt.Sprintf(" AND ABS(longitude - %f) < %f", lng, geoeps)
-	query += fmt.Sprintf(" AND time >= %d", leave_after)
-	query += fmt.Sprintf(" AND time <= %d", arrive_by)
+	//query += fmt.Sprintf(" AND time <= %d", leave_after)
+	//query += fmt.Sprintf(" AND time >= %d", arrive_by)
 	query += " ORDER BY trip_id"
 	rows, _ := dbConn.Query(query)
 	ids := []int32{}
@@ -86,11 +88,11 @@ func unionSet(id1, id2 []int32) []int32 {
 	r1 := len(id1)
 	r2 := len(id2)
 	for l1 < r1 || l2 < r2 {
-		if id1[l1] == id2[l2] {
+		if l1 < r1 && l2 < r2 && id1[l1] == id2[l2] {
 			ids = append(ids, id2[l2])
 			l1 += 1
 			l2 += 1
-		} else if id1[l1] < id2[l2] {
+		} else if l2 == r2 || (l1 < r1 && id1[l1] < id2[l2]) {
 			l1 += 1
 		} else {
 			l2 += 1
@@ -100,18 +102,23 @@ func unionSet(id1, id2 []int32) []int32 {
 }
 
 func TripSearch(w http.ResponseWriter, r *http.Request) {
+	log.Println("Search")
 	t := new(Trip)
 	_ = json.NewDecoder(r.Body).Decode(t)
 
 	id1 := matchTrips(t.OriginLat, t.OriginLng, t.LeaveAfter, t.ArriveBy)
 	id2 := matchTrips(t.DestinLat, t.DestinLng, t.LeaveAfter, t.ArriveBy)
 	ids := unionSet(id1, id2)
+	log.Println(id1, id2)
 
 	trip_info := "["
 	for _, id := range ids {
 		trip_info += GetTripJson(fmt.Sprint(id)) + ","
 	}
-	trip_info = trip_info[:len(trip_info)-1] + "]"
+	if len(trip_info) > 1 {
+		trip_info = trip_info[:len(trip_info)-1]
+	}
+	trip_info += "]"
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, trip_info)
 }
