@@ -27,7 +27,8 @@ func getTravelTime(origin_lat, origin_lng, destin_lat, destin_lng float64) float
 	}
 	responses, _, err := mapclient.Directions(context.Background(), request)
 	if err != nil {
-		log.Fatalf("fatal error: %s", err)
+		log.Println("error: %s", err)
+		return -1
 	}
 	return responses[0].Legs[0].Duration.Seconds()
 }

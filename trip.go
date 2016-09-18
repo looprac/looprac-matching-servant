@@ -41,7 +41,7 @@ func GetTripJson(tripid string) string {
 		var latitude, longitude float64
 		var action string
 		rows.Scan(&time, &latitude, &longitude, &action)
-		rowstr := fmt.Sprintf("{\"time\":%d,\"latitude\":%f,\"longitude\":%f,\"action\":%s}",
+		rowstr := fmt.Sprintf("{\"time\":%d,\"latitude\":%f,\"longitude\":%f,\"action\":\"%s\"}",
 			time, latitude, longitude, action)
 		stepstr += rowstr + ","
 	}
