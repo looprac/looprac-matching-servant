@@ -20,10 +20,10 @@ func initClient() *(maps.Client) {
 	return client
 }
 
-func getTravelTime(origin_alt, origin_lng, destin_alt, destin_lng float64) float64 {
+func getTravelTime(origin_lat, origin_lng, destin_lat, destin_lng float64) float64 {
 	request := &maps.DirectionsRequest{
-		Origin:      fmt.Sprintf("%f,%f", origin_alt, origin_lng),
-		Destination: fmt.Sprintf("%f,%f", destin_alt, destin_lng),
+		Origin:      fmt.Sprintf("%f,%f", origin_lat, origin_lng),
+		Destination: fmt.Sprintf("%f,%f", destin_lat, destin_lng),
 	}
 	responses, _, err := mapclient.Directions(context.Background(), request)
 	if err != nil {
