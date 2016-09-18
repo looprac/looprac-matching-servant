@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -25,6 +26,10 @@ func TripCreate(w http.ResponseWriter, r *http.Request) {
 		t.Id, t.OriginLat, t.OriginLng, t.DestinLat, t.DestinLng, t.LeaveAfter, t.ArriveBy, t.Seats, t.DriverUUID)
 
 	traveltime := int32(getTravelTime(t.OriginLat, t.OriginLng, t.DestinLat, t.DestinLng))
+	if traveltime < 0 {
+		log.Println("Invalid Localtion")
+		return
+	}
 
 	origin := NewRecord()
 	origin.Tripid = t.Id
@@ -51,6 +56,7 @@ func TripGet(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tripid := vars["tripid"]
 	jsonstr := GetTripJson(tripid)
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, jsonstr)
 }
 
@@ -106,5 +112,6 @@ func TripSearch(w http.ResponseWriter, r *http.Request) {
 		trip_info += GetTripJson(fmt.Sprint(id)) + ","
 	}
 	trip_info = trip_info[:len(trip_info)-1] + "]"
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, trip_info)
 }
